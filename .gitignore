@@ -52,3 +52,5 @@ src/data/legislation2.json
 .vscode
 .idx
 .idea
+# clerk configuration (can include secrets)
+/.clerk/
