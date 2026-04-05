@@ -1,8 +1,9 @@
 "use client"
-import { Gavel, LayoutDashboard, Newspaper, Eye, Users, MessageSquare, Wrench } from "lucide-react";
+import { Gavel, Newspaper, Eye, GitCompare } from "lucide-react";
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import type { ReactNode } from 'react';
+import React from 'react';
 import { StatePulseHeader } from "@/components/StatePulseHeader";
 import { BookmarksProvider } from "@/components/features/BookmarkButton";
 import {
@@ -21,33 +22,18 @@ import {
 } from "@/components/ui/sidebar";
 import {StatePulseFooter} from "@/components/StatePulseFooter";
 
-type ActiveView =
-    | "home"
-    | "dashboard"
-    | "updates"
-    | "tracker"
-    | "representatives"
-    | "posts"
-    | "timeline"
-    | "civic";
-
 interface MenuItem {
-  id: ActiveView;
+  id: string;
   path: string;
   label: string;
-  icon: LucideIcon;
+  icon: React.ComponentType<{ className?: string }>;
 }
 
 const menuItems: MenuItem[] = [
     { id: "home", path: "/", label: "Home", icon: Gavel },
-    { id: "dashboard", path: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { id: "updates", path: "/legislation", label: "Policy Updates", icon: Newspaper },
-    { id: "executive-orders", path: "/executive-orders", label: "Executive Orders", icon: Newspaper },
     { id: "tracker", path: "/tracker", label: "Track Policies", icon: Eye },
-    { id: "representatives", path: "/representatives", label: "Representatives", icon: Users },
-    { id: "posts", path: "/posts", label: "Community Posts", icon: MessageSquare },
-    // { id: "summaries", path: "/summaries", label: "AI Summaries", icon: BrainCircuit },
-    { id: "civic", path: "/civic", label: "Civic Tools", icon: Wrench },
+    { id: "comparison", path: "/comparison", label: "Policy Comparison Tool", icon: GitCompare },
 ];
 
 function SidebarContentWithAutoClose() {

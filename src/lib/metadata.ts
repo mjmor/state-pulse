@@ -163,6 +163,13 @@ export const pageMetadata = {
     keywords: ['terms of service', 'community guidelines', 'platform rules'],
     url: '/terms',
   }),
+
+  comparison: generateMetadata({
+    title: 'Policy Comparison Tool - Cross-Jurisdiction Analysis',
+    description: 'Compare legislation across states on key policy topics side by side.',
+    keywords: ['policy comparison', 'cross-jurisdiction', 'state legislation', 'energy policy'],
+    url: '/comparison',
+  }),
 };
 
 // Dynamic metadata generators for parameterized pages
