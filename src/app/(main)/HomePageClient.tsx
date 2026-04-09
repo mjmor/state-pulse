@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowRight, BarChart3, Landmark, Newspaper } from 'lucide-react';
 import { AnimatedSection } from '@/components/ui/AnimatedSection';
+import { StatePulseLogo } from '@/components/StatePulseLogo';
 import StatisticsShowcase from './StatisticsShowcase';
 import ImportanceShowcase from './ImportanceShowcase';
 
@@ -20,6 +21,9 @@ export default function HomePageClient() {
     <div className="flex flex-col min-h-screen bg-background text-foreground">
       {/* Hero Section */}
       <AnimatedSection className="bg-gradient-to-br from-primary via-primary/90 to-primary/70 text-primary-foreground py-24 px-6 md:px-10 text-center rounded-md shadow-lg overflow-hidden">
+        <div className="flex justify-center mb-8">
+          <StatePulseLogo size={160} className="text-primary-foreground" />
+        </div>
         <h1 className="text-5xl md:text-6xl font-bold mb-6 tracking-tight">
           Welcome to StatePulse
         </h1>

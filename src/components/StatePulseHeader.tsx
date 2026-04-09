@@ -1,5 +1,5 @@
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Gavel } from "lucide-react";
+import { StatePulseLogo } from "@/components/StatePulseLogo";
 import { SignedIn, SignedOut, UserButton, SignInButton, SignUpButton } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 
@@ -9,7 +9,7 @@ export function StatePulseHeader() {
       <div className="flex items-center gap-2 sm:gap-4 min-w-0">
         <SidebarTrigger />
         <div className="flex items-center gap-2 min-w-0">
-          <Gavel className="h-6 w-6 text-primary" />
+          <StatePulseLogo className="text-primary" size={24} />
           <h1 className="text-xl font-semibold font-headline truncate hidden sm:block">StatePulse</h1>
         </div>
       </div>
