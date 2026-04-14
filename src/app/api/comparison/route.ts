@@ -7,24 +7,47 @@ const API_HEADERS = {
   'X-API-Key': LEGISLATION_API_KEY,
 };
 
-interface LegislationBill {
+export interface LegislationBill {
   id: string;
   identifier?: string;
   title?: string;
   latestActionAt?: string | null;
   latestActionDescription?: string | null;
   geminiSummary?: string | null;
+  /** Populated only for keyword-search results — the matching text snippet. */
+  matchedContent?: string | null;
+  /** Cosine similarity score from semantic search (0–1). */
+  similarity?: number | null;
 }
 
 interface LegislationResponse {
   results: LegislationBill[];
 }
 
-async function fetchBillsForState(abbr: string, topic: string): Promise<LegislationBill[]> {
+interface SemanticSearchResult {
+  bill_id: string;
+  title: string;
+  jurisdiction_id: string;
+  jurisdiction_name: string;
+  classification: string[];
+  session: string;
+  matched_content: string;
+  similarity: number;
+}
+
+interface SemanticSearchResponse {
+  query: string;
+  jurisdiction: string | null;
+  total: number;
+  results: SemanticSearchResult[];
+}
+
+// ── Topic-based search (title + subject, merged & deduped) ────────────────────
+
+async function fetchBillsByTopic(abbr: string, topic: string): Promise<LegislationBill[]> {
   const url = (params: URLSearchParams) =>
     `${LEGISLATION_API_BASE}/api/legislation?${params.toString()}`;
 
-  // Run title-search and subject-search in parallel to replicate the original $or logic
   const [titleRes, subjectRes] = await Promise.all([
     fetch(url(new URLSearchParams({ jurisdiction: abbr, q: topic, limit: '8' })), {
       headers: API_HEADERS,
@@ -39,7 +62,6 @@ async function fetchBillsForState(abbr: string, topic: string): Promise<Legislat
     subjectRes.ok ? subjectRes.json() : Promise.resolve({ results: [] }),
   ]);
 
-  // Merge, deduplicate by id, sort by latestActionAt desc, take top 8
   const seen = new Set<string>();
   const merged: LegislationBill[] = [];
   for (const bill of [...(titleData.results ?? []), ...(subjectData.results ?? [])]) {
@@ -58,27 +80,58 @@ async function fetchBillsForState(abbr: string, topic: string): Promise<Legislat
   return merged.slice(0, 8);
 }
 
+// ── Keyword semantic search ───────────────────────────────────────────────────
+
+async function fetchBillsByKeyword(abbr: string, keyword: string): Promise<LegislationBill[]> {
+  const params = new URLSearchParams({ q: keyword, jurisdiction: abbr, limit: '8' });
+  const res = await fetch(
+    `${LEGISLATION_API_BASE}/api/legislation/search?${params.toString()}`,
+    { headers: API_HEADERS }
+  );
+
+  if (!res.ok) return [];
+
+  const data: SemanticSearchResponse = await res.json();
+
+  return (data.results ?? []).map((r) => ({
+    id: r.bill_id,
+    title: r.title,
+    matchedContent: r.matched_content,
+    similarity: r.similarity,
+  }));
+}
+
+// ── Route handler ─────────────────────────────────────────────────────────────
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const topic = searchParams.get('topic');
+    const keyword = searchParams.get('keyword');
     const statesParam = searchParams.get('states');
 
-    if (!topic || !statesParam) {
-      return NextResponse.json({ message: 'Missing required params: topic, states' }, { status: 400 });
+    if ((!topic && !keyword) || !statesParam) {
+      return NextResponse.json(
+        { message: 'Missing required params: (topic or keyword), states' },
+        { status: 400 }
+      );
     }
 
     const stateAbbrs = statesParam.split(',').map((s) => s.trim().toUpperCase()).filter(Boolean);
-
     const results: Record<string, LegislationBill[]> = {};
 
     await Promise.all(
       stateAbbrs.map(async (abbr) => {
-        results[abbr] = await fetchBillsForState(abbr, topic);
+        results[abbr] = keyword
+          ? await fetchBillsByKeyword(abbr, keyword)
+          : await fetchBillsByTopic(abbr, topic!);
       })
     );
 
-    return NextResponse.json({ topic, states: stateAbbrs, results }, { status: 200 });
+    return NextResponse.json(
+      { topic: keyword ?? topic, keyword: keyword ?? null, states: stateAbbrs, results },
+      { status: 200 }
+    );
   } catch (error) {
     console.error('Error in comparison API:', error);
     return NextResponse.json({ message: 'Error fetching comparison data' }, { status: 500 });

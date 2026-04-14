@@ -1,4 +1,5 @@
-import { Gavel, ExternalLink, Mail, Github, Instagram } from "lucide-react";
+import { Mail, Github, Instagram } from "lucide-react";
+import { StatePulseLogo } from "@/components/StatePulseLogo";
 import Link from "next/link";
 import React, { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
@@ -17,7 +18,7 @@ export function StatePulseFooter() {
           {/* Brand Section */}
           <div className="flex flex-col items-center md:items-start space-y-3 md:space-y-4 col-span-1 md:col-span-2 xl:col-span-1">
             <div className="flex items-center gap-2">
-              <Gavel className="h-5 w-5 sm:h-6 sm:w-6 text-primary flex-shrink-0" />
+              <StatePulseLogo className="text-primary flex-shrink-0" size={22} />
               <span className="text-base sm:text-lg font-semibold font-headline">
                 StatePulse
               </span>

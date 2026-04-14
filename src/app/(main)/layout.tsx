@@ -1,5 +1,6 @@
 "use client"
-import { Gavel, Newspaper, Eye, GitCompare } from "lucide-react";
+import { Newspaper, Eye, GitCompare } from "lucide-react";
+import { StatePulseLogo } from "@/components/StatePulseLogo";
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import type { ReactNode } from 'react';
@@ -30,7 +31,7 @@ interface MenuItem {
 }
 
 const menuItems: MenuItem[] = [
-    { id: "home", path: "/", label: "Home", icon: Gavel },
+    { id: "home", path: "/", label: "Home", icon: Newspaper },
     { id: "updates", path: "/legislation", label: "Policy Updates", icon: Newspaper },
     { id: "tracker", path: "/tracker", label: "Track Policies", icon: Eye },
     { id: "comparison", path: "/comparison", label: "Policy Comparison Tool", icon: GitCompare },
@@ -76,7 +77,7 @@ export default function MainAppLayout({ children }: { children: ReactNode }) {
       <Sidebar>
         <SidebarHeader className="p-4">
           <div className="flex items-center gap-2">
-            <Gavel className="h-7 w-7 text-sidebar-primary" />
+            <StatePulseLogo className="text-sidebar-foreground" size={28} />
             <h2 className="text-xl font-semibold font-headline text-sidebar-foreground">
               StatePulse
             </h2>
