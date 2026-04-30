@@ -1093,8 +1093,7 @@ export function PolicyUpdatesFeed() {
                             }}
                         >
                             <DropdownMenuRadioItem value="all">All States</DropdownMenuRadioItem>
-                            <DropdownMenuRadioItem value="congress">U.S. Congress</DropdownMenuRadioItem>
-                            {Object.keys(STATE_MAP).sort().map((state) => (
+                            {["Texas", "Pennsylvania", "West Virginia", "New Mexico", "Wyoming"].map((state) => (
                                 <DropdownMenuRadioItem key={state} value={state}>
                                     {state}
                                 </DropdownMenuRadioItem>
@@ -1154,37 +1153,13 @@ export function PolicyUpdatesFeed() {
             </div>
             {/*</AnimatedSection>*/}
 
-            {/* Classification badges */}
-            {/*<AnimatedSection>*/}
-            <div className="mb-4 flex flex-wrap gap-2">
-                {CLASSIFICATIONS.map(opt => (
-                    <Badge
-                        key={opt.value}
-                        variant={classification === opt.value ? "default" : "secondary"}
-                        onClick={() => {
-                            if (classification !== opt.value) {
-                                setClassification(opt.value);
-                                setUpdates([]);
-                                setSkip(0);
-                                skipRef.current = 0;
-                                setHasMore(true);
-                                setLoading(true);
-                            }
-                        }}
-                        className="cursor-pointer"
-                    >
-                        {opt.label}
-                    </Badge>
-                ))}
-            </div>
-            {/*</AnimatedSection>*/}
 
             {/* Predefined Subject Tags */}
             {/*<AnimatedSection>*/}
             <div className="mb-4">
                 <h3 className="text-sm font-medium mb-2">Subject Tags</h3>
                 <div className="flex flex-wrap gap-2">
-                    {Object.keys(BROAD_TOPIC_KEYWORDS).map((cat) => (
+                    {["Solar Energy", "Wind Energy", "Hydropower", "Data Centers", "Renewable Energy", "Oil and Gas", "Coal Mining", "Energy", "Environment", "Renewables"].map((cat) => (
                         <Badge
                             key={cat}
                             variant={subject === cat ? "default" : "secondary"}
