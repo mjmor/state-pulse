@@ -30,12 +30,14 @@ interface MenuItem {
   icon: React.ComponentType<{ className?: string }>;
 }
 
-const menuItems: MenuItem[] = [
+const allMenuItems: MenuItem[] = [
     { id: "home",       path: "/",           label: "Home",                   icon: Home },
     { id: "updates",    path: "/legislation", label: "Policy Updates",         icon: Newspaper },
     { id: "tracker",    path: "/tracker",     label: "Track Policies",         icon: Eye },
     { id: "comparison", path: "/comparison",  label: "Policy Comparison Tool", icon: GitCompare },
 ];
+
+const menuItems = allMenuItems.filter((item) => !["updates", "tracker"].includes(item.id));
 
 function SidebarContentWithAutoClose() {
   const pathname = usePathname();
