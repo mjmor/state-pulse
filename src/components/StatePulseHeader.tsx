@@ -19,8 +19,6 @@ export function StatePulseHeader() {
         {/* Desktop nav links */}
         <nav className="hidden lg:flex gap-6 items-center ml-4">
           {[
-            { href: '/legislation', label: 'Policy Updates' },
-            { href: '/tracker', label: 'Track Policies' },
             { href: '/comparison', label: 'Policy Comparison' },
           ].map(({ href, label }) => (
             <Link
