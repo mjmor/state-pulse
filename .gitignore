@@ -1,4 +1,6 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+.claude/
+CLAUDE.md
 
 # dependencies
 /node_modules
@@ -52,5 +54,6 @@ src/data/legislation2.json
 .vscode
 .idx
 .idea
+<<<<<<< Updated upstream
 # clerk configuration (can include secrets)
 /.clerk/
