@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { LoadingOverlay } from "@/components/ui/LoadingOverlay";
 import { STATE_NAMES } from "@/types/geo";
 
@@ -89,11 +91,13 @@ function SummaryPanel({
         {error ? (
           <p className="text-destructive text-sm">{error}</p>
         ) : (
-          <div className="prose prose-sm dark:prose-invert max-w-none text-sm leading-relaxed whitespace-pre-wrap">
-            {summary || (loading ? "" : "No summary available.")}
+          <div className="prose prose-sm dark:prose-invert max-w-none text-sm leading-relaxed">
             {loading && !summary && (
-              <span className="inline-block w-2 h-4 bg-primary/40 animate-pulse rounded-sm ml-0.5" />
+              <span className="inline-block w-2 h-4 bg-primary/40 animate-pulse rounded-sm" />
             )}
+            {summary ? (
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>{summary}</ReactMarkdown>
+            ) : (!loading && "No summary available.")}
           </div>
         )}
       </div>
