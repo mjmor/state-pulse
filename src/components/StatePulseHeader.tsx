@@ -2,29 +2,53 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { StatePulseLogo } from "@/components/StatePulseLogo";
 import { SignedIn, SignedOut, UserButton, SignInButton, SignUpButton } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export function StatePulseHeader() {
   return (
-    <header className="sticky top-0 z-50 flex h-16 items-center justify-between border-b bg-background px-2 sm:px-4 md:px-6 lg:px-8 shadow-sm w-full max-w-none min-w-0">
+    <header className="sticky top-0 z-50 flex h-16 items-center justify-between border-b border-sidebar-border px-2 sm:px-4 md:px-6 lg:px-8 w-full max-w-none min-w-0" style={{ background: '#163320' }}>
       <div className="flex items-center gap-2 sm:gap-4 min-w-0">
         <SidebarTrigger />
-        <div className="flex items-center gap-2 min-w-0">
+        <Link href="/" className="flex items-center gap-2 min-w-0">
           <StatePulseLogo className="text-primary" size={24} />
-          <h1 className="text-xl font-semibold font-headline truncate hidden sm:block">StatePulse</h1>
-        </div>
+          <span className="text-base font-semibold font-headline truncate hidden sm:block text-white">
+            StatePulse
+          </span>
+        </Link>
+
+        {/* Desktop nav links */}
+        <nav className="hidden lg:flex gap-6 items-center ml-4">
+          {[
+            { href: '/legislation', label: 'Policy Updates' },
+            { href: '/tracker', label: 'Track Policies' },
+            { href: '/comparison', label: 'Policy Comparison' },
+          ].map(({ href, label }) => (
+            <Link
+              key={href}
+              href={href}
+              className="font-label text-sm text-white/70 hover:text-white transition-colors duration-200"
+            >
+              {label}
+            </Link>
+          ))}
+        </nav>
       </div>
 
-      <div className="flex items-center gap-2 sm:gap-4 flex-wrap min-w-0">
+      <div className="flex items-center gap-3 flex-wrap min-w-0">
         <SignedIn>
           <UserButton afterSignOutUrl="/" />
         </SignedIn>
         <SignedOut>
           <div className="flex flex-row gap-2">
             <SignInButton mode="modal">
-              <Button>Sign In</Button>
+              <Button size="sm" variant="ghost" className="font-label text-sm text-white border border-white/50 hover:bg-white/10 hover:text-white">
+                Sign In
+              </Button>
             </SignInButton>
             <SignUpButton mode="modal">
-              <Button variant="outline">Sign Up</Button>
+              <Button size="sm" className="font-label text-sm text-white rounded-xl" style={{ background: '#2d6b3e' }}>
+                Sign Up
+              </Button>
             </SignUpButton>
           </div>
         </SignedOut>

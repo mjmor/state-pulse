@@ -10,8 +10,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        body: ['DM Sans', 'sans-serif'],
-        headline: ['Playfair Display', 'serif'],
+        body: ['Newsreader', 'serif'],
+        headline: ['Newsreader', 'serif'],
+        label: ['Public Sans', 'sans-serif'],
         code: ['monospace'],
       },
       colors: {

@@ -1,20 +1,86 @@
-/**
- * StatePulse logo — accurate continental US silhouette (filled) + dark green EKG heartbeat.
- *
- * SVG path derived from states.geojson via Douglas-Peucker simplification.
- * viewBox: "0 0 560 320"
- * Map fill: #7ab55c (bright leaf green)
- * EKG line: #1a3320 (dark forest green)
- */
-export function StatePulseLogo({
-  className,
-  size = 28,
-}: {
-  className?: string;
-  size?: number;
-}) {
-  const width = Math.round((size * 560) / 320);
+# Handoff: StatePulse Design Refresh
 
+## Overview
+This package contains the updated StatePulse homepage design featuring a chlorophyll green color scheme matching environmental policy themes. The design updates the sidebar, header, logo, and homepage layout. The goal is to apply this design language consistently across all pages: Home, Policy Updates (/legislation), Track Policies (/tracker), and Policy Comparison Tool (/comparison).
+
+## About the Design Files
+The files in this bundle are **design references created in HTML** — high-fidelity prototypes showing intended look and behavior, not production code to ship directly. Your task is to **recreate these designs in the existing Next.js/React codebase** using its established patterns, Tailwind CSS classes, shadcn/ui components, and existing file structure.
+
+## Fidelity
+**High-fidelity**: Pixel-accurate mockup with final colors, typography, spacing, and layout. Recreate as closely as possible using the codebase's existing Tailwind + shadcn/ui setup.
+
+---
+
+## Key Design Changes
+
+### 1. Color Scheme — Chlorophyll Green
+Replace the existing navy/dark-blue palette with a deep forest green palette throughout.
+
+**CSS Variables to update in `src/app/globals.css`:**
+
+```css
+:root {
+  --background: 150 40% 97%;           /* near-white with green tint */
+  --foreground: 150 60% 8%;            /* deep forest green */
+
+  --card: 150 20% 100%;
+  --card-foreground: 150 60% 8%;
+
+  --primary: 138 35% 38%;              /* #3d7a4f — chlorophyll green */
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 138 20% 60%;
+  --secondary-foreground: 150 60% 8%;
+
+  --accent: 138 30% 50%;
+  --accent-foreground: 0 0% 100%;
+
+  --muted: 150 15% 92%;
+  --muted-foreground: 150 15% 40%;
+
+  --border: 150 15% 85%;
+  --input: 150 15% 85%;
+  --ring: 138 35% 38%;
+
+  --sidebar-background: 150 58% 14%;   /* #163320 — darkest forest green */
+  --sidebar-foreground: 150 30% 85%;   /* #d6ead9 */
+  --sidebar-primary: 138 35% 55%;      /* active item highlight */
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 150 50% 18%;       /* hover state */
+  --sidebar-accent-foreground: 150 30% 90%;
+  --sidebar-border: 150 50% 12%;
+  --sidebar-ring: 138 35% 55%;
+}
+```
+
+**Exact hex values for reference:**
+| Token | Hex | Usage |
+|---|---|---|
+| Sidebar bg | `#163320` | Sidebar panel background |
+| Sidebar hover | `#1a3c24` | Nav item hover state |
+| Sidebar active | `#1e4429` | Active nav item |
+| Sidebar text | `#d6ead9` | Nav label color |
+| Sidebar muted | `#8ab898` | Footer text, secondary labels |
+| Header bg | `#163320` | Top header bar |
+| Button green | `#2d6b3e` | Primary CTA buttons |
+| Map fill | `#7ab55c` | Logo US map silhouette |
+| EKG line | `#1a3320` | Logo heartbeat line (dark green) |
+
+---
+
+### 2. Logo — `src/components/StatePulseLogo.tsx`
+Replace the existing SVG with the new accurate US map silhouette (derived from the real `states.geojson` file) with a dark green EKG heartbeat line.
+
+**Full replacement SVG path data (viewBox="0 0 560 320"):**
+
+The US map path is derived from `public/districts/states.geojson` using Douglas-Peucker simplification at 2px tolerance, projecting:
+- lon: -125 to -66.5 → x: 0 to 560
+- lat: 24 to 50 → y: 320 to 0 (inverted)
+Excludes: Alaska, Hawaii, Puerto Rico, territories.
+
+```tsx
+export function StatePulseLogo({ className, size = 28 }: { className?: string; size?: number }) {
+  const width = Math.round((size * 560) / 320);
   return (
     <svg
       width={width}
@@ -41,3 +107,69 @@ export function StatePulseLogo({
     </svg>
   );
 }
+```
+
+---
+
+### 3. Sidebar — `src/app/(main)/layout.tsx`
+Keep exactly **4 nav items** and no others:
+
+```ts
+const menuItems = [
+  { id: "home",       path: "/",           label: "Home",                   icon: Home },
+  { id: "updates",    path: "/legislation", label: "Policy Updates",         icon: Newspaper },
+  { id: "tracker",    path: "/tracker",     label: "Track Policies",         icon: Eye },
+  { id: "comparison", path: "/comparison",  label: "Policy Comparison Tool", icon: GitCompare },
+];
+```
+
+Remove any additional menu items that may exist. The sidebar footer shows © year + StatePulse and the donate button.
+
+---
+
+### 4. Header — `src/components/StatePulseHeader.tsx`
+- Background: `#163320` (same as sidebar)
+- Sign In: ghost button, white border, white text
+- Sign Up: filled button, `#2d6b3e` background
+
+Update the header className to use `bg-sidebar` or hardcode `style={{ background: '#163320' }}`.
+
+---
+
+### 5. Hero Section — `src/app/(main)/HomePageClient.tsx`
+The hero uses `/hero-bg.jpg` with a dark green gradient overlay:
+```css
+background: linear-gradient(135deg, rgba(16,44,22,0.82) 0%, rgba(26,70,35,0.75) 100%);
+```
+
+Logo size in hero: `size={160}` (renders at 280×160px).
+
+CTA buttons:
+- Primary: "Join Us Today" → `/sign-up` or `/tracker`  
+- Secondary: "Who We Are" → `/about` (outline style)
+
+---
+
+### 6. Applying to Other Pages
+Once the sidebar, header, and globals are updated, the other pages (/legislation, /tracker, /comparison) should automatically inherit the new color scheme via CSS variables. Spot-check:
+- Cards use `bg-card` — will shift to white/light green
+- Primary accents use `text-primary` / `bg-primary` — will shift to chlorophyll green
+- Any hardcoded navy/blue hex values should be replaced with the equivalent green token
+
+---
+
+## Files in This Package
+- `StatePulse Homepage.html` — Full hi-fi reference prototype (open in browser)
+- `us-path-data.txt` — Raw SVG path data for the US map silhouette
+- `README.md` — This file
+
+## Assets
+- `/public/hero-bg.jpg` — Hero background image (wind turbines, already in repo)
+- `/public/districts/states.geojson` — Source data used to generate the logo SVG path
+
+## Implementation Order
+1. Update `globals.css` color tokens
+2. Replace `StatePulseLogo.tsx` SVG
+3. Confirm sidebar has exactly 4 tabs in `layout.tsx`
+4. Update header background in `StatePulseHeader.tsx`
+5. Spot-check all 4 pages in browser; fix any hardcoded colors

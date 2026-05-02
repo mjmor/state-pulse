@@ -1,5 +1,5 @@
 "use client"
-import { Newspaper, Eye, GitCompare } from "lucide-react";
+import { Home, Newspaper, Eye, GitCompare } from "lucide-react";
 import { StatePulseLogo } from "@/components/StatePulseLogo";
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -31,10 +31,10 @@ interface MenuItem {
 }
 
 const menuItems: MenuItem[] = [
-    { id: "home", path: "/", label: "Home", icon: Newspaper },
-    { id: "updates", path: "/legislation", label: "Policy Updates", icon: Newspaper },
-    { id: "tracker", path: "/tracker", label: "Track Policies", icon: Eye },
-    { id: "comparison", path: "/comparison", label: "Policy Comparison Tool", icon: GitCompare },
+    { id: "home",       path: "/",           label: "Home",                   icon: Home },
+    { id: "updates",    path: "/legislation", label: "Policy Updates",         icon: Newspaper },
+    { id: "tracker",    path: "/tracker",     label: "Track Policies",         icon: Eye },
+    { id: "comparison", path: "/comparison",  label: "Policy Comparison Tool", icon: GitCompare },
 ];
 
 function SidebarContentWithAutoClose() {
